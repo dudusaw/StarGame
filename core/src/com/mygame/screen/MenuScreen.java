@@ -25,7 +25,6 @@ public class MenuScreen extends BaseScreen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.3f, 0.6f, 0.4f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.begin();
         background.draw(batch);
         batch.end();
     }
@@ -43,6 +42,6 @@ public class MenuScreen extends BaseScreen {
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        return super.touchDown(touch, pointer, button);
+        return false;
     }
 }
