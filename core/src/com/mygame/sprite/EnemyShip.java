@@ -14,7 +14,7 @@ public class EnemyShip extends Ship {
         this.bulletPool = bulletPool;
         this.worldBounds = worldBounds;
         this.sound = sound;
-        v = new Vector2();
+        v = new Vector2(0, -0.5f);
         v0 = new Vector2();
         bulletPos = new Vector2();
         bulletV = new Vector2();
@@ -26,6 +26,9 @@ public class EnemyShip extends Ship {
         bulletPos.set(pos.x, pos.y - getHalfHeight());
         if (getBottom() < worldBounds.getBottom()) {
             destroy();
+        }
+        if (pos.y <= worldBounds.getTop() - getHalfHeight()) {
+            v.set(v0);
         }
     }
 
@@ -41,7 +44,7 @@ public class EnemyShip extends Ship {
             int hp
     ) {
         this.regions = regions;
-        this.v.set(v0);
+        this.v0.set(v0);
         this.bulletRegion = bulletRegion;
         this.bulletHeight = bulletHeight;
         this.bulletV.set(bulletV);
