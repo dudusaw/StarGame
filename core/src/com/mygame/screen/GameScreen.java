@@ -28,6 +28,8 @@ public class GameScreen extends BaseScreen {
 
     private MainShip mainShip;
 
+    private Music music;
+
     @Override
     public void show() {
         super.show();
@@ -40,6 +42,10 @@ public class GameScreen extends BaseScreen {
         }
         bulletPool = new BulletPool();
         mainShip = new MainShip(atlas, bulletPool);
+        music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
+        music.setVolume(0.3f);
+        music.setLooping(true);
+        music.play();
     }
 
     @Override
@@ -63,6 +69,8 @@ public class GameScreen extends BaseScreen {
         bg.dispose();
         atlas.dispose();
         bulletPool.dispose();
+        music.dispose();
+        mainShip.dispose();
         super.dispose();
     }
 
