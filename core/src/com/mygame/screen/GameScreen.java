@@ -18,6 +18,7 @@ import com.mygame.pool.ExplosionPool;
 import com.mygame.sprite.Background;
 import com.mygame.sprite.Bullet;
 import com.mygame.sprite.EnemyShip;
+import com.mygame.sprite.GameOver;
 import com.mygame.sprite.MainShip;
 import com.mygame.sprite.Star;
 import com.mygame.utils.EnemyEmitter;
@@ -44,6 +45,9 @@ public class GameScreen extends BaseScreen {
 
     private EnemyEmitter enemyEmitter;
 
+    private boolean isPlaying;
+    private GameOver gameOver;
+
     @Override
     public void show() {
         super.show();
@@ -66,6 +70,9 @@ public class GameScreen extends BaseScreen {
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         music.setLooping(true);
         music.play();
+
+        gameOver = new GameOver(atlas);
+        isPlaying = true;
     }
 
     @Override
@@ -83,6 +90,7 @@ public class GameScreen extends BaseScreen {
             star.resize(worldBounds);
         }
         mainShip.resize(worldBounds);
+        gameOver.resize(worldBounds);
     }
 
     @Override
@@ -127,11 +135,13 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.update(delta);
         }
-        mainShip.update(delta);
-        bulletPool.updateActiveSprites(delta);
+        if (isPlaying) {
+            mainShip.update(delta);
+            bulletPool.updateActiveSprites(delta);
+            enemyPool.updateActiveSprites(delta);
+            enemyEmitter.generate(delta);
+        }
         explosionPool.updateActiveSprites(delta);
-        enemyPool.updateActiveSprites(delta);
-        enemyEmitter.generate(delta);
     }
 
     private void checkCollisions() {
@@ -168,6 +178,9 @@ public class GameScreen extends BaseScreen {
                 }
             }
         }
+        if (mainShip.isDestroyed()) {
+            isPlaying = false;
+        }
     }
 
     private void freeAllDestroyed() {
@@ -184,10 +197,14 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.draw(batch);
         }
-        mainShip.draw(batch);
-        bulletPool.drawActiveSprites(batch);
+        if (isPlaying) {
+            mainShip.draw(batch);
+            bulletPool.drawActiveSprites(batch);
+            enemyPool.drawActiveSprites(batch);
+        } else {
+            gameOver.draw(batch);
+        }
         explosionPool.drawActiveSprites(batch);
-        enemyPool.drawActiveSprites(batch);
         batch.end();
     }
 }
